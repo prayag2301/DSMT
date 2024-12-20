@@ -31,7 +31,7 @@ az login
 
 Upload to azure
 ```sh
-az storage blob upload-batch --destination '$web' --source dist --overwrite --connection-string "DefaultEndpointsProtocol=https;AccountName=mlpredictionapp;AccountKey=Eav0lSCIvYBHOSfzqH9/oSqNo3j2rRgVa+hRHQOpSPQtwHwCKqNdm1PFTEVhw/xBRQlpiOZGPE+A+AStfXrApA==;EndpointSuffix=core.windows.net"
+az storage blob upload-batch --destination '$web' --source dist --overwrite --connection-string ""
 
 
 ```

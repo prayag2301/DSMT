@@ -5,17 +5,19 @@
 https://testprayag.z1.web.core.windows.net/
 ```
 
-## Screenshots
+## About Us
+```
+Welcome to Prediction Models!
 
-### Welcome page
-![image](https://github.com/user-attachments/assets/c1c4bcc2-1d55-49ce-bfa4-c0c6e86cca89)
+Discover the power of data-driven predictions.
 
-### User Input Page
-![image](https://github.com/user-attachments/assets/f60a5649-f650-47e5-8377-014c081299e5)
+Here, you can easily forecast the number of days late of your delivery using the key parameters like suppliers, quantity number, and more. Our platform not only provides accurate predictions but also allows you to compare multiple machine learning models and analyze their performance. For even greater confidence, you can view the average results from all models to make well-informed decisions.
 
+Start exploring now and see how predictive insights and model comparisons can transform your operations.
+
+Your success, powered by foresight. 🚀
+```
 ### Prediction
-
-
 https://github.com/user-attachments/assets/07a61b05-da52-4de0-97d4-74a49a83163c
 
 # Run Frontend and Backend

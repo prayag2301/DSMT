@@ -19,11 +19,11 @@ def score_model(req: func.HttpRequest) -> func.HttpResponse:
     # Load Models
     #gbm = pickle.load(open('./models/gbm_500.pkl', 'rb')) # Gradient Boosting Model (INITAL MODEL)
 
-    gbm700 = pickle.load(open('./models/gbm_n700_depth3_lr0.01.pkl', 'rb')) # Gradient Boosting Model (TUNED MODEL)
+    gridSearch = pickle.load(open('./models/newbest_model.pkl', 'rb')) # Gradient Boosting Model (TUNED MODEL)
 
-    lr = pickle.load(open('./models/lr_a1_it1000_sol-auto_ridge.pkl', 'rb'))    # Linear Regression Model
+    # lr = pickle.load(open('./models/lr_a1_it1000_sol-auto_ridge.pkl', 'rb'))    # Linear Regression Model
 
-    rf = pickle.load(open('./models/rf_n600_depth8_split2_leaf1_sqrt_regressor.pkl', 'rb')) # Random Forest Model
+    # rf = pickle.load(open('./models/rf_n600_depth8_split2_leaf1_sqrt_regressor.pkl', 'rb')) # Random Forest Model
 
     
 
@@ -43,32 +43,13 @@ def score_model(req: func.HttpRequest) -> func.HttpResponse:
     payload = pd.DataFrame(data)
     
     # Calculate the prediction
-    prediction_gbm700 =  gbm700.predict(payload)[0]
-    prediction_lr = lr.predict(payload)[0]
-    prediction_rf =  rf.predict(payload)[0]
+    prediction_GRID_SearchCV =  gridSearch.predict(payload)[0]
+  
 
   # Calculate the average prediction
-    count = 0
-    total_prediction = 0
 
-
-    if prediction_gbm700 is not None and prediction_gbm700 >= 0:
-        count += 1
-        total_prediction += prediction_gbm700
-
-    if prediction_lr is not None and prediction_lr >= 0:
-        count += 1
-        total_prediction += prediction_lr
-
-    if prediction_rf is not None and prediction_rf >= 0:
-        count += 1
-        total_prediction += prediction_rf
-
-    if count > 0:
-        avg_prediction = total_prediction / count
-    else:
-        avg_prediction = None  # Something went wrong
-
+    avg_prediction = prediction_GRID_SearchCV
+   
     if avg_prediction is None:
         return json.dumps({
             "message": "Model could not be scored",
@@ -80,10 +61,7 @@ def score_model(req: func.HttpRequest) -> func.HttpResponse:
     
     return json.dumps({
         "message": f"""Model scored successfully with quantity: {quantity} 
-        and supplier: {supplier}""",
-        "prediction_gbm700": prediction_gbm700,
-        "prediction_lr": prediction_lr,
-        "prediction_rf": prediction_rf,        
+        and supplier: {supplier}""",       
         "avg_prediction": avg_prediction,
         "status_code": 200
         })

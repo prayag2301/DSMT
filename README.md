@@ -1,4 +1,15 @@
+# Screenshots
 
+### Welcome page
+![image](https://github.com/user-attachments/assets/c1c4bcc2-1d55-49ce-bfa4-c0c6e86cca89)
+
+### User Input Page
+![image](https://github.com/user-attachments/assets/f60a5649-f650-47e5-8377-014c081299e5)
+
+### Prediction
+
+
+https://github.com/user-attachments/assets/07a61b05-da52-4de0-97d4-74a49a83163c
 
 # Run Frontend and Backend
 
@@ -17,40 +28,5 @@ inside folder backend
 func start
 ```
 
-
-# Publish Frontend and Backend to Azure
-
-## Frontend
-
-Inside folder frontend
-
-Build Frontend
-```sh
-az login
-```
-
-Upload to azure
-```sh
-az storage blob upload-batch --destination '$web' --source dist --overwrite --connection-string ""
-
-
-```
-
-## Backend
-
-Login into azure
-
-```sh
-az login
-```
-
-Publish backend from with backend folder
-
-```sh
-func azure functionapp publish {functionAppName} \
-  --python \
-  --build remote
-
-```
 
 

@@ -1,4 +1,11 @@
-# Screenshots
+# Deployment URL
+
+####
+```
+https://testprayag.z1.web.core.windows.net/
+```
+
+## Screenshots
 
 ### Welcome page
 ![image](https://github.com/user-attachments/assets/c1c4bcc2-1d55-49ce-bfa4-c0c6e86cca89)

@@ -24,7 +24,7 @@ This was our first approach towards improving the base ML model. The result was 
 #### 2. GridSearch CV on a Neural Network 
 Performing GridSearch on a neural network helped us to find optimal hyperparamters. This proved helped us tackle the overfitting problem associated with using less features for an Artificial Neural Network. we then fitted an ANN with dropout layers, learning rate and epochs as hyperparamters suggested from GridSearchCV
 
-### Prediction
+## Prediction
 https://github.com/user-attachments/assets/07a61b05-da52-4de0-97d4-74a49a83163c
 
 # Run Frontend and Backend

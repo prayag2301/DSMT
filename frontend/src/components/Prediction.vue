@@ -6,29 +6,29 @@ const backendUrl = computed(() => {
   return import.meta.env.VITE_APP_BACKEND_URL;
 });
 
-// Placeholder for supplier
-const selectedSupplier = ref('');
+// Placeholder for numeric features
+const totalQty = ref(0); // Quantity input
 
-// Options for suppliers
+// Placeholders for supplier
+const selectedSupplier = ref('');
 const suppliers = ['Aromatico', 'Beans Inc.', 'Fair Trade AG', 'Farmers of Brazil', 'Handelskontor Hamburg'];
 
-// Placeholder for quantity
-const quantity = ref(0);
+// Placeholders for warehouse
+const selectedWarehouse = ref('');
+const warehouses = ['Amsterdam - RR', 'Barcelona - RR', 'Hamburg - RR', 'Istanbul - RR', 'London - RR', 'Nairobi - RR', 'Naples - RR'];
 
-// Placeholder for prediction
+// Placeholders for items
+const selectedItem = ref('');
+const items = ['Arabica', 'Excelsa', 'Liberica', 'Maragogype', 'Maragogype Type B', 'Robusta'];
+
+// Placeholder for set_warehouse
+const selectedSetWarehouse = ref('');
+const setWarehouses = ['Barcelona - RR', 'Hamburg - RR', 'Istanbul - RR', 'London - RR', 'Nairobi - RR', 'Naples - RR'];
+
+// Placeholder for prediction result
 const prediction = ref('');
-
-// Loading state
 const loading = ref(false);
 
-// Placeholder for warehouse
-const selectedWarehouse = ref('');
-
-// Options for warehouses
-const warehouses = ['Berlin', 'Hamburg', 'Munich', 'Cologne', 'Frankfurt'];
-
-// Welcome text visibility
-const showWelcomeText = ref(true);
 
 // Hide welcome text after 3 seconds
 onMounted(() => {
@@ -37,29 +37,65 @@ onMounted(() => {
   }, 3000);
 });
 
-// Make a get request to the backend
+// Make a POST request to the backend
 const getPrediction = async () => {
-  window.console.log('fetching data');
+  window.console.log('Fetching prediction...');
 
-  prediction.value = '';
+  prediction.value = ''; // Clear previous prediction
+  loading.value = true; // Set loading state
 
-  loading.value = true; // Set loading to true
   try {
-    const response = await fetch(`${backendUrl.value}/score_model?supplier=${selectedSupplier.value}&quantity=${quantity.value}`);
+    const response = await fetch(`${backendUrl.value}/FINAL_best_model`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        total_qty: totalQty.value,
+        supplier_Aromatico: selectedSupplier.value === 'Aromatico' ? 1 : 0,
+        supplier_Beans_Inc: selectedSupplier.value === 'Beans Inc.' ? 1 : 0,
+        supplier_Fair_Trade_AG: selectedSupplier.value === 'Fair Trade AG' ? 1 : 0,
+        supplier_Farmers_of_Brazil: selectedSupplier.value === 'Farmers of Brazil' ? 1 : 0,
+        supplier_Handelskontor_Hamburg: selectedSupplier.value === 'Handelskontor Hamburg' ? 1 : 0,
+        warehouse_Amsterdam_RR: selectedWarehouse.value === 'Amsterdam - RR' ? 1 : 0,
+        warehouse_Barcelona_RR: selectedWarehouse.value === 'Barcelona - RR' ? 1 : 0,
+        warehouse_Hamburg_RR: selectedWarehouse.value === 'Hamburg - RR' ? 1 : 0,
+        warehouse_Istanbul_RR: selectedWarehouse.value === 'Istanbul - RR' ? 1 : 0,
+        warehouse_London_RR: selectedWarehouse.value === 'London - RR' ? 1 : 0,
+        warehouse_Nairobi_RR: selectedWarehouse.value === 'Nairobi - RR' ? 1 : 0,
+        warehouse_Naples_RR: selectedWarehouse.value === 'Naples - RR' ? 1 : 0,
+        item_Arabica: selectedItem.value === 'Arabica' ? 1 : 0,
+        item_Excelsa: selectedItem.value === 'Excelsa' ? 1 : 0,
+        item_Liberica: selectedItem.value === 'Liberica' ? 1 : 0,
+        item_Maragogype: selectedItem.value === 'Maragogype' ? 1 : 0,
+        item_Maragogype_Type_B: selectedItem.value === 'Maragogype Type B' ? 1 : 0,
+        item_Robusta: selectedItem.value === 'Robusta' ? 1 : 0,
+        set_warehouse_Barcelona_RR: selectedSetWarehouse.value === 'Barcelona - RR' ? 1 : 0,
+        set_warehouse_Hamburg_RR: selectedSetWarehouse.value === 'Hamburg - RR' ? 1 : 0,
+        set_warehouse_Istanbul_RR: selectedSetWarehouse.value === 'Istanbul - RR' ? 1 : 0,
+        set_warehouse_London_RR: selectedSetWarehouse.value === 'London - RR' ? 1 : 0,
+        set_warehouse_Nairobi_RR: selectedSetWarehouse.value === 'Nairobi - RR' ? 1 : 0,
+        set_warehouse_Naples_RR: selectedSetWarehouse.value === 'Naples - RR' ? 1 : 0,
+      }),
+    });
+
     const data = await response.json();
     window.console.log(data);
-    if (data.avg_prediction !== undefined) {
-      prediction.value = data.avg_prediction.toFixed(2);
+
+    if (data.prediction !== undefined) {
+      prediction.value = data.prediction.toFixed(2); // Update the prediction result
       triggerAnimation();
     } else {
-      alert('Prediction data is not available');
+      alert('Prediction data is not available.');
     }
   } catch (error) {
-    alert('Could not fetch data');
+    alert('Could not fetch prediction data.');
     window.console.error('Error fetching data:', error);
+  } finally {
+    loading.value = false; // Reset loading state
   }
-  loading.value = false;
 };
+
 
 // Trigger animation
 const triggerAnimation = () => {
@@ -94,35 +130,57 @@ const triggerAnimation = () => {
       <div class="dashboard">
         <!-- Animation video -->
         <video class="animation-video" src="/output.mp4" style="display: none; width: 100%; max-width: 600px; margin-bottom: 1em;"></video>
-        
-        <!-- Prediction input -->
         <div class="input-container">
+          <!-- Supplier Input -->
           <div class="input-tile hover-shadow">
-            <label for="supplier">Select a supplier</label>
-            <select id="supplier" v-model="selectedSupplier" :style="{ color: selectedSupplier ? 'black' : 'grey' }">
+            <label for="supplier">Select Supplier</label>
+            <select id="supplier" v-model="selectedSupplier">
               <option v-for="supplier in suppliers" :key="supplier" :value="supplier">{{ supplier }}</option>
             </select>
           </div>
+          <!-- Quantity Input -->
           <div class="input-tile hover-shadow">
             <label for="quantity">Enter Quantity</label>
-            <input id="quantity" type="number" v-model="quantity"/>
+            <input id="quantity" type="number" v-model="totalQty" />
           </div>
+        
+          <!-- Warehouse Input -->
           <div class="input-tile hover-shadow">
-            <label for="warehouse">Select a warehouse </label>
-            <select id="warehouse" v-model="selectedWarehouse" :style="{ color: selectedWarehouse ? 'black' : 'grey' }">
+            <label for="warehouse">Select Warehouse</label>
+            <select id="warehouse" v-model="selectedWarehouse">
               <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse">{{ warehouse }}</option>
             </select>
           </div>
+        
+          <!-- Item Name Input -->
           <div class="input-tile hover-shadow">
-            <button v-if="!loading" type="button" @click="getPrediction">Predict</button>
+            <label for="item">Select Item</label>
+            <select id="item" v-model="selectedItem">
+              <option v-for="item in items" :key="item" :value="item">{{ item }}</option>
+            </select>
+          </div>
+        
+          <!-- Set Warehouse Input -->
+          <div class="input-tile hover-shadow">
+            <label for="set-warehouse">Select Set Warehouse</label>
+            <select id="set-warehouse" v-model="selectedSetWarehouse">
+              <option v-for="setWarehouse in setWarehouses" :key="setWarehouse" :value="setWarehouse">
+                {{ setWarehouse }}
+              </option>
+            </select>
+          </div>
+        
+          <!-- Submit Button -->
+          <div class="input-tile hover-shadow">
+            <button v-if="!loading" @click="getPrediction">Predict</button>
             <div v-if="loading" class="spinner"></div>
           </div>
         </div>
-
-        <!-- Prediction result -->
+        <!-- Prediction Result -->
         <div class="prediction-container">
           <h3>Predicted Days Late</h3>
-          <p class="prediction">{{ prediction }}</p>
+          <p class="prediction" v-if="prediction">{{ prediction }} days</p>
+          <p v-else>No prediction available.</p>
         </div>
       </div>
     </div>

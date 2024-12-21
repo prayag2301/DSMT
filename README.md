@@ -47,6 +47,9 @@ This resulted in the final model are
 - MAE: 1.8848
 - R2: 0.8459
 
+Additional remarks:
+The model was trained using a automatic stop if the model doesn't improve (final number of epochs 95).
+
 Below you'll find a example image of such a model:
 ![Neural+networks](https://github.com/user-attachments/assets/6d7d9480-f152-4b48-8f38-b5d8b6ebc178)
 

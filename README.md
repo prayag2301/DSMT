@@ -45,6 +45,9 @@ This resulted in a final test_loss of 16 and a RMSE of 3
 Below you'll find a example image of such a model:
 ![Neural+networks](https://github.com/user-attachments/assets/6d7d9480-f152-4b48-8f38-b5d8b6ebc178)
 
+You can find out more about the model under:
+backend/models/my_little_pony_model.ipynb
+
 ## Prediction
 https://github.com/user-attachments/assets/07a61b05-da52-4de0-97d4-74a49a83163c
 

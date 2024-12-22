@@ -57,7 +57,10 @@ You can find out more about the model under:
 backend/models/my_little_pony_model.ipynb
 
 ## Prediction
-https://github.com/user-attachments/assets/07a61b05-da52-4de0-97d4-74a49a83163c
+
+
+https://github.com/user-attachments/assets/1919ca0c-fe90-4c76-bc08-14b69ad90024
+
 
 # Run Frontend and Backend
 

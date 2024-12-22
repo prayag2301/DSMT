@@ -2,7 +2,7 @@
 
 ####
 ```
-https://testprayag.z1.web.core.windows.net/
+https://prayagdeploy.z16.web.core.windows.net/
 ```
 
 ## About Us

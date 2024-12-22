@@ -25,10 +25,13 @@ const items = ['Arabica', 'Excelsa', 'Liberica', 'Maragogype', 'Maragogype Type 
 const selectedSetWarehouse = ref('');
 const setWarehouses = ['Barcelona - RR', 'Hamburg - RR', 'Istanbul - RR', 'London - RR', 'Nairobi - RR', 'Naples - RR'];
 
+const itemList = ['Excelsa', 'Liberica', 'Maragogype', 'Maragogype Type B', 'Robusta'];
+const selectedItemList = ref('');
 // Placeholder for prediction result
 const prediction = ref('');
 const loading = ref(false);
 
+const showWelcomeText = ref(true);
 
 // Hide welcome text after 3 seconds
 onMounted(() => {
@@ -45,45 +48,54 @@ const getPrediction = async () => {
   loading.value = true; // Set loading state
 
   try {
-    const response = await fetch(`${backendUrl.value}/FINAL_best_model`, {
+    const requestBody: { [key: string]: (string | number)[] } = {
+      total_qty: [totalQty.value || 0],
+    };
+
+    // Add all 30 features with default values of 0
+    const allFeatures = [
+      ...items.map(i => `item_${i}`),
+      ...setWarehouses.map(sw => `set_warehouse_${sw}`),
+      ...suppliers.map(s => `supplier_${s}`),
+      ...warehouses.map(w => `warehouse_${w}`),
+      ...itemList.map(il => `item_name_${il}`)
+    ];
+
+    allFeatures.forEach(feature => {
+      requestBody[feature] = [0];
+    });
+
+    // Set the selected features to 1
+    if (selectedSupplier.value) {
+      requestBody[`supplier_${selectedSupplier.value}`] = [1];
+    }
+    if (selectedWarehouse.value) {
+      requestBody[`warehouse_${selectedWarehouse.value}`] = [1];
+    }
+    if (selectedItem.value) {
+      requestBody[`item_${selectedItem.value}`] = [1];
+    }
+    if (selectedSetWarehouse.value) {
+      requestBody[`set_warehouse_${selectedSetWarehouse.value}`] = [1];
+    }
+    if (selectedItemList.value) {
+      requestBody[`item_name_${selectedItemList.value}`] = [1];
+    }
+
+    console.log(requestBody);
+    const response = await fetch(`${backendUrl.value}/score_model`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        total_qty: totalQty.value,
-        supplier_Aromatico: selectedSupplier.value === 'Aromatico' ? 1 : 0,
-        supplier_Beans_Inc: selectedSupplier.value === 'Beans Inc.' ? 1 : 0,
-        supplier_Fair_Trade_AG: selectedSupplier.value === 'Fair Trade AG' ? 1 : 0,
-        supplier_Farmers_of_Brazil: selectedSupplier.value === 'Farmers of Brazil' ? 1 : 0,
-        supplier_Handelskontor_Hamburg: selectedSupplier.value === 'Handelskontor Hamburg' ? 1 : 0,
-        warehouse_Amsterdam_RR: selectedWarehouse.value === 'Amsterdam - RR' ? 1 : 0,
-        warehouse_Barcelona_RR: selectedWarehouse.value === 'Barcelona - RR' ? 1 : 0,
-        warehouse_Hamburg_RR: selectedWarehouse.value === 'Hamburg - RR' ? 1 : 0,
-        warehouse_Istanbul_RR: selectedWarehouse.value === 'Istanbul - RR' ? 1 : 0,
-        warehouse_London_RR: selectedWarehouse.value === 'London - RR' ? 1 : 0,
-        warehouse_Nairobi_RR: selectedWarehouse.value === 'Nairobi - RR' ? 1 : 0,
-        warehouse_Naples_RR: selectedWarehouse.value === 'Naples - RR' ? 1 : 0,
-        item_Arabica: selectedItem.value === 'Arabica' ? 1 : 0,
-        item_Excelsa: selectedItem.value === 'Excelsa' ? 1 : 0,
-        item_Liberica: selectedItem.value === 'Liberica' ? 1 : 0,
-        item_Maragogype: selectedItem.value === 'Maragogype' ? 1 : 0,
-        item_Maragogype_Type_B: selectedItem.value === 'Maragogype Type B' ? 1 : 0,
-        item_Robusta: selectedItem.value === 'Robusta' ? 1 : 0,
-        set_warehouse_Barcelona_RR: selectedSetWarehouse.value === 'Barcelona - RR' ? 1 : 0,
-        set_warehouse_Hamburg_RR: selectedSetWarehouse.value === 'Hamburg - RR' ? 1 : 0,
-        set_warehouse_Istanbul_RR: selectedSetWarehouse.value === 'Istanbul - RR' ? 1 : 0,
-        set_warehouse_London_RR: selectedSetWarehouse.value === 'London - RR' ? 1 : 0,
-        set_warehouse_Nairobi_RR: selectedSetWarehouse.value === 'Nairobi - RR' ? 1 : 0,
-        set_warehouse_Naples_RR: selectedSetWarehouse.value === 'Naples - RR' ? 1 : 0,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
     window.console.log(data);
 
-    if (data.prediction !== undefined) {
-      prediction.value = data.prediction.toFixed(2); // Update the prediction result
+    if (data.avg_prediction !== undefined) {
+      prediction.value = data.avg_prediction.toFixed(2); // Update the prediction result
       triggerAnimation();
     } else {
       alert('Prediction data is not available.');
@@ -159,7 +171,12 @@ const triggerAnimation = () => {
               <option v-for="item in items" :key="item" :value="item">{{ item }}</option>
             </select>
           </div>
-        
+          <div class="input-tile hover-shadow">
+            <label for="itemList">Select ItemName</label>
+            <select id="itemList" v-model="selectedItemList">
+              <option v-for="item in itemList" :key="item" :value="item">{{ item }}</option>
+            </select>
+          </div>
           <!-- Set Warehouse Input -->
           <div class="input-tile hover-shadow">
             <label for="set-warehouse">Select Set Warehouse</label>

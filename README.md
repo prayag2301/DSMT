@@ -1,9 +1,4 @@
-# Deployment URL
 
-####
-```
-https://prayagdeploy.z16.web.core.windows.net/
-```
 
 ## About Us
 
@@ -61,7 +56,12 @@ backend/models/my_little_pony_model.ipynb
 
 https://github.com/user-attachments/assets/1919ca0c-fe90-4c76-bc08-14b69ad90024
 
+### Deployment URL
 
+#####
+```
+https://prayagdeploy.z16.web.core.windows.net/
+```
 # Run Frontend and Backend
 
 ## Start frontend
